@@ -1,0 +1,16 @@
+function reconstruct = Rconstruct(I,n)
+
+K = 1/16.*[1 2 1 ; 2 4 2 ; 1 2 1]; 
+
+gaussianPyramid = GaussianPyramid(image,3);
+
+for j = n-1:1       
+    Inputimg(j).img = imR;
+    imR = custom_convolution(Inputimg(j).img,K);
+    imR1 = expand_images(imR);
+    Inputimg(j).img = imR1;
+    Inputimg(j-1).img = Inputimg(j-1).img + laplacePyramid(Inputimg(j).img,n);     
+end
+    figure(1);
+    imshow(Inputimg(1).img);
+end

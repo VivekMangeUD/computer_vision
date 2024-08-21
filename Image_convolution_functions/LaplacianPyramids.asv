@@ -1,0 +1,22 @@
+function laplacePyramid = LaplacianPyramids(input_image,n)
+
+laplacePyramid = cell(1,n);
+gaussianPyramid = cell(1,n);
+
+gaussianPyramid = GaussianPyramid(input_image,n);
+
+% laplacePyramid{1} = gaussianPyramid[1] - expand_images(gaussianPyramid[2])
+% laplacePyramid{2} = gaussianPyramid[2] - expand_images(gaussianPyramid[3])
+% laplacePyramid{3} = gaussianPyramid[3]
+
+for i = 1:n
+    if i == n
+        laplacePyramid{i} = gaussianPyramid{i};
+    else
+        laplacePyramid{i} = gaussianPyramid{i} - expand_images(gaussianPyramid{i+1};
+
+    end
+    figure(i)
+    imshow(laplacePyramid{i}.img)
+end
+end

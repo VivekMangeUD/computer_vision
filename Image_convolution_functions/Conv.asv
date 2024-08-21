@@ -1,0 +1,51 @@
+function [outputImage] = Conv(input_image,kernel)
+
+filter_size = length(kernel); %width of filter
+
+%computing the number of layers of pixels with value 0 to surround the image
+
+layers = floor(filter_size/2); %should be 1
+
+image_paddding = padarray(input_image, [layers, layers]); %padding with 0 around image
+%extrating Red, Green and Blue components of the image
+red_chan = image_paddding(:, :, 1); 
+green_chan = image_paddding(:, :, 2);
+blue_chan = image_paddding(:, :, 3);
+
+redCompNew = convolution(red_chan,kernel,layers,filter_size); %calling manual convulution function
+redCompNew = cast(redCompNew,'like',input_image); %converting to uint8 form from double
+
+greenCompNew = convolution(green_chan,kernel,layers,filter_size); %calling manual convulution function
+greenCompNew = cast(greenCompNew,'like',input_image); %converting to uint8 form from double
+
+blueCompNew = convolution(blue_chan,kernel,layers,filter_size); %calling manual convulution function
+blueCompNew = cast(blueCompNew,'like',input_image); %converting to uint8 form from double
+
+redCompNew = redCompNew(layers:end-layers,layers:end-layers);
+greenCompNew = greenCompNew(layers:end-layers,layers:end-layers);
+blueCompNew = blueCompNew(layers:end-layers,layers:end-layers);
+
+outputImage = cat(3, redCompNew, greenCompNew, blueCompNew); %combining the 3 components to form a single image
+
+%manual convolution function to apply to each component invidually
+
+function  convImg  = convolution(img,kernel,layers,filterSiz)
+
+[rows, columns] = size(img);
+filteredImage = zeros(size(img)); 
+
+for column = layers + 1 : columns - layers
+	for row = layers + 1 : rows - layers
+		localSum = 0;
+		for c = 1 : filterSiz
+			ic = column + c - layers - 1;
+			for r = 1 : filterSiz
+				ir = row + r - layers - 1;
+				localSum = localSum + double(img(ir, ic)) * kernel(r, c); 
+			end
+        end
+		convImg(row, column) = localSum; 
+	end
+end
+end
+end

@@ -1,0 +1,50 @@
+function [outputImage] = custom_convolution(input_image,kernel)
+
+% image_class = class(input_image);
+kernel_len = length(kernel);
+% Padding 0
+layers = floor(kernel_len/2);
+image_paddding = padarray(input_image, [layers, layers]);
+%Separating each channel of the image for convolution
+red_chan = image_paddding(:, :, 1); 
+green_chan = image_paddding(:, :, 2);
+blue_chan = image_paddding(:, :, 3);
+
+new_red_chan = convolution(red_chan,kernel,layers,kernel_len);
+% new_red_chan = cast(new_red_chan,'like',input_image); %converting to uint8 form from double
+new_red_chan = uint8(new_red_chan);
+new_red_chan = new_red_chan(layers:end-layers,layers:end-layers);
+
+
+new_green_chan = convolution(green_chan,kernel,layers,kernel_len);
+% greenCompNew = cast(greenCompNew,'like',input_image); %converting to uint8 form from double
+new_green_chan = uint8(new_green_chan);
+new_green_chan = new_green_chan(layers:end-layers,layers:end-layers);
+
+new_blue_chan = convolution(blue_chan,kernel,layers,kernel_len);
+% new_blue_chan = cast(new_blue_chan,'like',input_image); %converting to uint8 form from double
+new_blue_chan = uint8(new_blue_chan);
+new_blue_chan = new_blue_chan(layers:end-layers,layers:end-layers);
+% concate 3
+outputImage = cat(3, new_red_chan, new_green_chan, new_blue_chan);
+
+
+%custom convolution function
+function  convImg  = convolution(image,kernel,layers,kernel_len)
+
+[rows, cols] = size(image);
+for column = layers + 1 : cols - layers
+	for row = layers + 1 : rows - layers
+		addition = 0;
+		for c = 1 : kernel_len
+			image_col = column + c - layers - 1;
+			for r = 1 : kernel_len
+				image_row = row + r - layers - 1;
+				addition = addition + double(image(image_row, image_col)) * kernel(r, c); 
+			end
+        end
+		convImg(row, column) = addition; 
+	end
+end
+end
+end

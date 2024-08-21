@@ -1,0 +1,23 @@
+function [final_image] = Reduce(input_image) 
+% % Verify why is image not loading with same size
+
+% Reduce Image size by half
+scale = [0.5 0.5]; % Change value to adjust the reduction
+originalSize = size(input_image); 
+reducedsize = max(floor(scale.*originalSize(1:2)),1); 
+
+rowCount = min(round(((1:reducedsize(1))-0.5)./scale(1)+0.5),originalSize(1)); 
+colCount = min(round(((1:reducedsize(2))-0.5)./scale(2)+0.5),originalSize(2)); 
+
+final_image = input_image(rowCount,colCount,:); 
+
+% Prints
+
+imshow(input_image); % Displat OG image
+size(input_image) % display OG image size for verification
+figure(2);
+imshow(final_image); 
+imwrite(final_image,'Reduced Image.png'); 
+size(final_image)
+
+end

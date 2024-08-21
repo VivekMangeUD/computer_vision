@@ -1,0 +1,50 @@
+function laplacePyramid = LPyramid(input_image,n)
+
+kernel = 1/16.*[1 2 1 ; 2 4 2 ; 1 2 1]; 
+laplacePyramid = cell(1,n);
+gaussianPyramid = cell(1,n);
+
+gaussianPyramid = GaussPyramid(input_image,n);
+
+% laplacePyramid{0} = gaussianPyramid[0] - expand_images(gaussianPyramid[1])
+% laplacePyramid{1} = gaussianPyramid[1] - expand_images(gaussianPyramid[2])
+% laplacePyramid{2} = gaussianPyramid[2]
+
+for i = 1:n
+    if i == n
+        laplacePyramid{i}.img = gaussianPyramid{i};
+    else
+        laplacePyramid{i}.img = gaussianPyramid{i} - expand_images(gaussianPyramid{i+1});
+
+    end
+    figure(i)
+    imshow(laplacePyramid{i}.img)
+end
+% 
+% for i = 1:n
+%     if i == 1
+%         im = Conv(I,kernel);
+%         Inputimage(i).img = im;      
+%     else 
+% 
+%         im = Convolve(Gimg(i-1).img,kernel);
+% 
+%         Inputimage = Reduce(im);
+% 
+%         Inputimage(i).img = imR;        
+%     end
+% end
+% 
+% for j = 1:n
+%     if j == 1
+%         im = Convolve(I,kernel);
+%         Gimg(j).img = im;      
+%     else         
+%         Gimg(j-1).img = Gimg(j-1).img - myExpand(Gimg(j).img);      
+%         Limg(j).img = Gimg(j-1).img;
+%         figure(j);
+%         imshow(Limg(j).img);
+%     end
+% end
+
+end
